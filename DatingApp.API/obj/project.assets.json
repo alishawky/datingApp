@@ -12540,11 +12540,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\MyProjects Github\\DatingApp\\datingApp\\DatingApp.API\\DatingApp.API.csproj",
+      "projectUniqueName": "D:\\MyProjects Github\\DatingApp\\datingApp\\DatingApp.API\\DatingApp.API.csproj",
       "projectName": "DatingApp.API",
-      "projectPath": "d:\\MyProjects Github\\DatingApp\\datingApp\\DatingApp.API\\DatingApp.API.csproj",
+      "projectPath": "D:\\MyProjects Github\\DatingApp\\datingApp\\DatingApp.API\\DatingApp.API.csproj",
       "packagesPath": "C:\\Users\\ali\\.nuget\\packages\\",
-      "outputPath": "d:\\MyProjects Github\\DatingApp\\datingApp\\DatingApp.API\\obj\\",
+      "outputPath": "D:\\MyProjects Github\\DatingApp\\datingApp\\DatingApp.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
