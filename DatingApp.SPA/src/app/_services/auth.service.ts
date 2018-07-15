@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 // import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-// import 'rxjs/add/operator/map';
+import { Observable, throwError, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 @Injectable({
@@ -32,7 +31,8 @@ export class AuthService {
           localStorage.setItem('token', user.tokenString);
           this.userToken = user.tokenString;
         }
-      })
+      }),
+      catchError(this.handleError)
     );
   }
 
@@ -42,6 +42,35 @@ export class AuthService {
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post(this.baseUrl + 'register', model, httpOptions);
+    return this.http.post(this.baseUrl + 'register', model, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: any) {
+    const applicationError = error.headers.get('Application-Error');
+    if (applicationError) {
+      // return Observable.throw(applicationError);
+      return throwError(applicationError);
+    }
+
+    const serverError = error;
+    let modelStateErrors = '';
+    if (serverError) {
+      for (const key in serverError.error) {
+        if (serverError.error[key]) {
+          modelStateErrors += serverError.error[key] + '\n';
+        }
+
+      }
+    }
+
+    // return Observable.throw(
+    //   modelStateErrors || 'Server error'
+    // );
+
+    return throwError(
+      modelStateErrors || 'Server error'
+    );
   }
 }
