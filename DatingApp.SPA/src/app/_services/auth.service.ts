@@ -49,9 +49,11 @@ export class AuthService {
     );
   }
 
-  // loggedin() {
-  //   return tokenNotExpired('token');
-  // }
+  loggedin() {
+    // return tokenNotExpired('token');
+    const token = localStorage.getItem('token');
+    return !!token;
+  }
 
   private handleError(error: any) {
     const applicationError = error.headers.get('Application-Error');
