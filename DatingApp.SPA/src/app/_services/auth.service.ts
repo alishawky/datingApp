@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+// import { tokenNotExpired } from 'angular2-jwt';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class AuthService {
 
   baseUrl = 'http://localhost:5000/api/auth/';
   userToken: any;
+  decodedToken: any;
 
   constructor(private http: HttpClient) { }
 
@@ -46,6 +48,10 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
+
+  // loggedin() {
+  //   return tokenNotExpired('token');
+  // }
 
   private handleError(error: any) {
     const applicationError = error.headers.get('Application-Error');
