@@ -46,7 +46,7 @@ export class MemberDetailComponent implements OnInit {
       this.galleryImages = this.getImages();
     }, error => {
       this.alertify.error('Problem retrieving data');
-      this.router.navigate(['/home']);
+      this.router.navigate(['/members']);
     });
   }
 

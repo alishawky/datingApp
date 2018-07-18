@@ -20,6 +20,8 @@ import { AuthGuard } from './_guards/auth.guard';
 import { UserService } from './_services/User.service';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 
 @NgModule({
    declarations: [
@@ -31,7 +33,8 @@ import { MemberDetailComponent } from './members/member-detail/member-detail.com
       MessagesComponent,
       ListsComponent,
       MemberCardComponent,
-      MemberDetailComponent
+      MemberDetailComponent,
+      MemberEditComponent
    ],
    imports: [
       BrowserModule,
@@ -46,6 +49,7 @@ import { MemberDetailComponent } from './members/member-detail/member-detail.com
         AuthService,
         AlertifyService,
         AuthGuard,
+        PreventUnsavedChanges,
         UserService
     ],
     bootstrap: [
