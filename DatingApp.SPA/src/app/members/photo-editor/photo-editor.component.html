@@ -2,7 +2,7 @@
   <div class="col-sm-2" *ngFor="let photo of photos">
     <img class="thumbnail" src="{{photo.url}}" alt="">
     <div class="text-center">
-      <button type="button" class="btn btn-xs">Main</button>
+      <button type="button" class="btn btn-xs" (click)="setMainPhoto(photo)" [disabled]="photo.isMain" [ngClass]="photo.isMain ? 'btn-success active' : 'btn-default'">Main</button>
       <button type="button" class="btn btn-xs btn-danger">
         <i class="fa fa-trash-o"></i>
       </button>
@@ -45,7 +45,7 @@
             <strong>{{ item?.file?.name }}</strong>
           </td>
           <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
-         
+
         </tr>
       </tbody>
     </table>

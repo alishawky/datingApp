@@ -34,6 +34,12 @@ export class UserService {
     );
   }
 
+  setMainPhoto(userId: number, id: number) {
+    return this.http.post(this.baseUrl + '/users/' + userId + '/photos/' + id + '/setMain', {}, this.jwt()).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private jwt() {
     const token = localStorage.getItem('token');
 
