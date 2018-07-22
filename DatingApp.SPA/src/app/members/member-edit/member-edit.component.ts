@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms';
 import { UserService } from '../../_services/User.service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { User } from '../../_models/User';
+import { AuthService } from '../../_services/auth.service';
 
 
 @Component({
@@ -15,14 +16,17 @@ import { User } from '../../_models/User';
 export class MemberEditComponent implements OnInit {
   user: User;
   @ViewChild('editForm') editForm: NgForm;
+  photoUrl: string;
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private alertify: AlertifyService,
     private router: Router) { }
 
   ngOnInit() {
     this.loadUser();
+    this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
   }
 
 
@@ -46,6 +50,10 @@ export class MemberEditComponent implements OnInit {
       this.alertify.error('Problem updating data');
       // this.router.navigate(['/members']);
     });
+  }
+
+  updateMainPhoto(photoUrl) {
+    this.user.photoUrl = photoUrl;
   }
 
 }

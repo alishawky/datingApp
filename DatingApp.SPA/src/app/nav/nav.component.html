@@ -33,6 +33,9 @@
       </form>
 
       <ul *ngIf="loggedIn()" class="nav navbar-nav navbar-right">
+        <li>
+          <img src="{{photoUrl}}" alt="">
+        </li>
         <li class="dropdown" dropdown>
           <a (click)="false" class="dropdown-toggle" dropdownToggle>Welcome admin <span class="caret"></span></a>
           <ul class="dropdown-menu" *dropdownMenu>

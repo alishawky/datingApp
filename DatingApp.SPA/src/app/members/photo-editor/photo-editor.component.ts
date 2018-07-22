@@ -1,10 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Photo } from '../../_models/Photo';
 import { FileUploader } from 'ng2-file-upload';
 import { environment } from '../../../environments/environment';
 import { UserService } from '../../_services/User.service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { Router } from '@angular/router';
+import * as _ from 'underscore';
+import { AuthService } from '../../_services/auth.service';
 
 @Component({
   selector: 'app-photo-editor',
@@ -16,9 +18,12 @@ export class PhotoEditorComponent implements OnInit {
   uploader: FileUploader;
   hasBaseDropZoneOver = false;
   private baseUrl = environment.apiUrl;
+  currentMain: Photo;
+  @Output() getMemberPhotoChange = new EventEmitter<string>();
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private alertify: AlertifyService,
     private router: Router) { }
 
@@ -59,9 +64,26 @@ export class PhotoEditorComponent implements OnInit {
 
   setMainPhoto(photo: Photo) {
     this.userService.setMainPhoto(5, photo.id).subscribe(() => {
-      console.log('Successfully set to main');
+      this.currentMain = _.findWhere(this.photos, { isMain: true });
+      this.currentMain.isMain = false;
+      photo.isMain = true;
+      this.getMemberPhotoChange.emit(photo.url);
+      this.authService.changeMemberPhoto(photo.url);
+      this.authService.currentUser.photoUrl = photo.url;
+      localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
     }, error => {
       this.alertify.error(error);
+    });
+  }
+
+  deletePhoto(id: number) {
+    this.alertify.confirm('Are you sure you want ro delete photo', () => {
+      this.userService.deletePhoto(5, id).subscribe(() => {
+        this.photos.splice(_.findIndex(this.photos, { id: id }), 1);
+        this.alertify.success('Photo has been deleted');
+      }, error => {
+        this.alertify.error(error);
+      });
     });
   }
 }

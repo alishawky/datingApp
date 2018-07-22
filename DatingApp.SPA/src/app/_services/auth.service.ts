@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 // import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { Observable, throwError, of } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { User } from '../_models/User';
 // import { tokenNotExpired } from 'angular2-jwt';
 
 @Injectable({
@@ -12,9 +13,16 @@ export class AuthService {
 
   baseUrl = 'http://localhost:5000/api/auth/';
   userToken: any;
+  currentUser: User;
   decodedToken: any;
+  private photoUrl = new BehaviorSubject<string>('../../assets/user.png');
+  currentPhotoUrl = this.photoUrl.asObservable();
 
   constructor(private http: HttpClient) { }
+
+  changeMemberPhoto(photoUrl: string) {
+    this.photoUrl.next(photoUrl);
+  }
 
   login(model: any) {
     // const headers = new HttpHeaders({ 'content-type': 'application/json' });
@@ -31,7 +39,10 @@ export class AuthService {
         const user: any = response;
         if (user) {
           localStorage.setItem('token', user.tokenString);
+          localStorage.setItem('user', JSON.stringify(user.user));
           this.userToken = user.tokenString;
+          this.currentUser = user.user;
+          this.changeMemberPhoto(this.currentUser.photoUrl);
         }
       }),
       catchError(this.handleError)
