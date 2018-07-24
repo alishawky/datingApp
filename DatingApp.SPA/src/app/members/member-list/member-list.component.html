@@ -1,7 +1,66 @@
+<!-- header -->
+
+<div class="row">
+  <div class="text-center">
+    <h2>Your matches - {{pagination.totalItems}} found</h2>
+  </div>
+</div>
+
 <div class="container">
+  <!-- HTML for filters -->
+  <div class="row">
+    <form class="form-inline" #form="ngForm" (ngSubmit)="loadUsers()" novalidate>
+      <div class="form-group">
+        <label for="minAge">Age From</label>
+        <input type="number" class="form-control" style="width: 70px" id="minAge" name="minAge" [(ngModel)]="userParams.minAge">
+      </div>
+
+      <div class="form-group">
+        <label for="maxAge">Age To</label>
+        <input type="number" class="form-control" style="width: 70px" id="maxAge" name="maxAge" [(ngModel)]="userParams.maxAge">
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Show: </label>
+        <select class="form-control" style="width: 130px" id="gender" name="gender" [(ngModel)]="userParams.gender">
+          <!-- <option *ngFor="let gender of genderList" [value]="gender.value">
+            {{gender.display}}
+          </option> -->
+          <option value="male">Male</option>
+          <option value="female">female</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-left:10px">Apply Filters</button>
+      <button type="button" class="btn btn-info" style="margin-left:10px" (click)="resetFilters()">Reset Filter</button>
+      <div class="pull-right">
+        <label style="margin-right: 10px;">Order By:</label>
+        <div class="btn-group">
+          <button type="button" name="orderBy" [(ngModel)]="userParams.orderBy" (click)="loadUsers()" class="btn btn-primary" btnRadio="lastActive">Last Active</button>
+          <button type="button" name="orderBy" [(ngModel)]="userParams.orderBy" (click)="loadUsers()" class="btn btn-primary" btnRadio="created">Newest Member</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <br>
+
+  <!-- HTML for ordering -->
+  <!-- 
+<div class="pull-right">
+  <label style="margin-right: 10px">Order By: </label>
+  <div class="btn-group">
+    <button type="button" name="orderBy" class="btn btn-primary" btnRadio="lastActive">Last Active</button>
+    <button type="button" name="orderBy" class="btn btn-primary" btnRadio="created">Newest Members</button>
+  </div>
+</div> -->
   <div class="row equal">
     <div *ngFor="let user of users" class="col-lg-2 col-md-3 col-sm-6">
       <app-member-card [user]="user"></app-member-card>
     </div>
   </div>
+</div>
+
+<div class="text-center">
+  <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)"
+    [(ngModel)]="pagination.currentPage" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+  </pagination>
 </div>
