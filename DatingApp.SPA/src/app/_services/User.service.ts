@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { User } from '../_models/User';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { PaginatedResult } from '../_models/Pagination';
 
@@ -15,11 +15,19 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(page?: number, itemPerPage?: number, userParams?: any): Observable<PaginatedResult<User[]>> {
+  getUsers(page?: number, itemPerPage?: number, userParams?: any, likeParams?: any): Observable<PaginatedResult<User[]>> {
     const pagenatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
     let queryString = '?';
     if (page != null && itemPerPage != null) {
       queryString += 'pageNumber=' + page + '&pageSize=' + itemPerPage + '&';
+    }
+
+    if (likeParams === 'likers') {
+      queryString += 'likers=true&';
+    }
+
+    if (likeParams === 'likees') {
+      queryString += 'likees=true&';
     }
 
     if (userParams != null) {
@@ -71,6 +79,12 @@ export class UserService {
     );
   }
 
+  sendLike(id: number, recipientId: number) {
+    return this.http.post(this.baseUrl + '/user/' + id + '/like/' + recipientId, {}, this.jwt()).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private jwt() {
     const token = localStorage.getItem('token');
 
@@ -89,6 +103,10 @@ export class UserService {
 
   private handleError(error: any) {
     const applicationError = error.headers.get('Application-Error');
+    if (error.status === 400) {
+      return throwError(error.error);
+    }
+
     if (applicationError) {
       // return Observable.throw(applicationError);
       return throwError(applicationError);
