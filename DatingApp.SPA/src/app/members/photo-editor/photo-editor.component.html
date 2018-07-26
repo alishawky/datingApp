@@ -44,7 +44,7 @@
           <td>
             <strong>{{ item?.file?.name }}</strong>
           </td>
-          <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+          <td nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
 
         </tr>
       </tbody>
@@ -53,7 +53,7 @@
     <div>
       <div>
         Queue progress:
-        <div class="progress" style="">
+        <div class="progress">
           <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
         </div>
       </div>

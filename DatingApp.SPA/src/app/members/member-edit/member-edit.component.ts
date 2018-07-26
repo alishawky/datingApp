@@ -31,7 +31,7 @@ export class MemberEditComponent implements OnInit {
 
 
   loadUser() {
-    this.userService.getUser(5).subscribe((user: User) => {
+    this.userService.getUser(this.authService.decodedToken.nameid).subscribe((user: User) => {
       this.user = user;
     }, error => {
       this.alertify.error('Problem retrieving data');

@@ -1,6 +1,7 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { JwtModule } from '@auth0/angular-jwt';
 import { NgModule } from '@angular/core';
 import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
@@ -27,6 +28,10 @@ import { FileUploadModule } from 'ng2-file-upload';
 import {TimeAgoPipe} from 'time-ago-pipe';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
+export function tokenGetter() {
+    return localStorage.getItem('token');
+  }
+
 @NgModule({
    declarations: [
       AppComponent,
@@ -46,6 +51,13 @@ import { MemberMessagesComponent } from './members/member-messages/member-messag
    imports: [
       BrowserModule,
       HttpClientModule,
+      JwtModule.forRoot({
+        config: {
+          tokenGetter: tokenGetter,
+          whitelistedDomains: ['localhost:5000']
+          // blacklistedRoutes: ['localhost:3001/auth/']
+        }
+      }),
       FormsModule,
       ReactiveFormsModule,
       BsDropdownModule.forRoot(),

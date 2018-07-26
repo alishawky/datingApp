@@ -37,7 +37,7 @@
           <img src="{{photoUrl}}" alt="">
         </li>
         <li class="dropdown" dropdown>
-          <a (click)="false" class="dropdown-toggle" dropdownToggle>Welcome admin <span class="caret"></span></a>
+          <a (click)="false" class="dropdown-toggle" dropdownToggle>Welcome {{authService.decodedToken.unique_name | titlecase}} <span class="caret"></span></a>
           <ul class="dropdown-menu" *dropdownMenu>
             <li><a [routerLink]="['/member/edit']" href="#"><i class="fa fa-user"></i> Edit Profile</a></li>
             <li role="separator" class="divider"></li>

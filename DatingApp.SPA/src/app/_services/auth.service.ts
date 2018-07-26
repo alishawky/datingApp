@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-// import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { User } from '../_models/User';
-// import { tokenNotExpired } from 'angular2-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { AuthUser } from '../_models/AuthUser';
 
 @Injectable({
   providedIn: 'root'
@@ -13,35 +13,34 @@ export class AuthService {
 
   baseUrl = 'http://localhost:5000/api/auth/';
   userToken: any;
-  currentUser: User;
   decodedToken: any;
+  currentUser: User;
   private photoUrl = new BehaviorSubject<string>('../../assets/user.png');
   currentPhotoUrl = this.photoUrl.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private jwtHelperService: JwtHelperService) { }
 
   changeMemberPhoto(photoUrl: string) {
     this.photoUrl.next(photoUrl);
   }
 
   login(model: any) {
-    // const headers = new HttpHeaders({ 'content-type': 'application/json' });
-    // const options = new RequestOptions({ headers: headers });
-
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
 
-    return this.http.post(this.baseUrl + 'login', model, httpOptions).pipe(
-      map((response: Response) => {
+    return this.http.post<AuthUser>(this.baseUrl + 'login', model, httpOptions).pipe(
+      map((response) => {
         const user: any = response;
         if (user) {
           localStorage.setItem('token', user.tokenString);
           localStorage.setItem('user', JSON.stringify(user.user));
-          this.userToken = user.tokenString;
+          this.decodedToken = this.jwtHelperService.decodeToken(user.tokenString);
           this.currentUser = user.user;
+          this.userToken = user.tokenString;
           if (this.currentUser.photoUrl !== null) {
             this.changeMemberPhoto(this.currentUser.photoUrl);
           } else {
@@ -65,9 +64,12 @@ export class AuthService {
   }
 
   loggedin() {
-    // return tokenNotExpired('token');
-    const token = localStorage.getItem('token');
-    return !!token;
+    const token = this.jwtHelperService.tokenGetter();
+    if (!token) {
+      return false;
+    }
+
+    return !this.jwtHelperService.isTokenExpired(token);
   }
 
   private handleError(error: any) {

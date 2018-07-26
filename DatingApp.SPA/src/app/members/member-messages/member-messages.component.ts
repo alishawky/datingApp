@@ -4,6 +4,7 @@ import { AlertifyService } from '../../_services/alertify.service';
 import { Message } from '../../_models/Message';
 import * as _ from 'underscore';
 import { tap } from 'rxjs/operators';
+import { AuthService } from '../../_services/auth.service';
 
 @Component({
   selector: 'app-member-messages',
@@ -17,6 +18,7 @@ export class MemberMessagesComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private alertify: AlertifyService) { }
 
   ngOnInit() {
@@ -24,8 +26,8 @@ export class MemberMessagesComponent implements OnInit {
   }
 
   loadMessages() {
-    const currentUserId = 5;
-    this.userService.getMessageThread(5, this.userId)
+    const currentUserId = this.authService.decodedToken.nameid;
+    this.userService.getMessageThread(currentUserId, this.userId)
       .pipe(
         tap(messages => {
           _.each(messages, (message: Message) => {
@@ -44,8 +46,8 @@ export class MemberMessagesComponent implements OnInit {
 
   sendMessage() {
     this.newMessage.recipientId = this.userId;
-    this.newMessage.senderId = 5;
-    this.userService.sendMessage(5, this.newMessage).subscribe(message => {
+    this.newMessage.senderId = this.authService.decodedToken.nameid;
+    this.userService.sendMessage(this.authService.decodedToken.nameid, this.newMessage).subscribe(message => {
       this.messages.unshift(message);
       this.newMessage.content = '';
     }, error => {

@@ -5,6 +5,7 @@ import { UserService } from '../_services/User.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { Router } from '@angular/router';
 import * as _ from 'underscore';
+import { AuthService } from '../_services/auth.service';
 
 @Component({
   selector: 'app-messages',
@@ -18,6 +19,7 @@ export class MessagesComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private alertify: AlertifyService,
     private router: Router) { }
 
@@ -28,7 +30,7 @@ export class MessagesComponent implements OnInit {
 
 
   loadMessages() {
-    this.userService.getMessages(5, this.pagination.currentPage, this.pagination.itemsPerPage, this.messageContainer).subscribe((res: PaginatedResult<Message[]>) => {
+    this.userService.getMessages(this.authService.decodedToken.nameid, this.pagination.currentPage, this.pagination.itemsPerPage, this.messageContainer).subscribe((res: PaginatedResult<Message[]>) => {
       this.messages = res.result;
       // this.pagination = res.pagination;
       this.pagination = this.pagination;
@@ -39,7 +41,7 @@ export class MessagesComponent implements OnInit {
 
   deleteMessage(id: number) {
     this.alertify.confirm('Are you sure you want to delete this message', () => {
-      this.userService.deleteMessage(id, 5).subscribe(() => {
+      this.userService.deleteMessage(id, this.authService.decodedToken.nameid).subscribe(() => {
         this.messages.splice(_.findIndex(this.messages, { id: id }), 1);
         this.alertify.success('Message has been deleted');
       }, error => {

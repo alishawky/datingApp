@@ -38,7 +38,7 @@ export class PhotoEditorComponent implements OnInit {
 
   initializeUploader() {
     this.uploader = new FileUploader({
-      url: this.baseUrl + '/users/' + 5 + '/photos',
+      url: this.baseUrl + '/users/' + this.authService.decodedToken.nameid + '/photos',
       authToken: 'Bearer ' + localStorage.getItem('token'),
       isHTML5: true,
       allowedFileType: ['image'],
@@ -69,7 +69,7 @@ export class PhotoEditorComponent implements OnInit {
   }
 
   setMainPhoto(photo: Photo) {
-    this.userService.setMainPhoto(5, photo.id).subscribe(() => {
+    this.userService.setMainPhoto(this.authService.decodedToken.nameid, photo.id).subscribe(() => {
       this.currentMain = _.findWhere(this.photos, { isMain: true });
       this.currentMain.isMain = false;
       photo.isMain = true;
@@ -84,7 +84,7 @@ export class PhotoEditorComponent implements OnInit {
 
   deletePhoto(id: number) {
     this.alertify.confirm('Are you sure you want ro delete photo', () => {
-      this.userService.deletePhoto(5, id).subscribe(() => {
+      this.userService.deletePhoto(this.authService.decodedToken.nameid, id).subscribe(() => {
         this.photos.splice(_.findIndex(this.photos, { id: id }), 1);
         this.alertify.success('Photo has been deleted');
       }, error => {

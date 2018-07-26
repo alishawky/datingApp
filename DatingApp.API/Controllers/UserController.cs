@@ -107,7 +107,7 @@ namespace DatingApp.API.Controllers
 
             //Save Photo to database
             if (await _repo.SaveAll())
-                return Ok();
+                return Ok(new {});
 
             return BadRequest("Faild to add User");
         }
