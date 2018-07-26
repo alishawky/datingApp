@@ -25,6 +25,7 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import {TimeAgoPipe} from 'time-ago-pipe';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 @NgModule({
    declarations: [
@@ -33,6 +34,7 @@ import {TimeAgoPipe} from 'time-ago-pipe';
       HomeComponent,
       RegisterComponent,
       MemberListComponent,
+      MemberMessagesComponent,
       MessagesComponent,
       ListsComponent,
       MemberCardComponent,

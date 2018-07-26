@@ -33,9 +33,6 @@ namespace DatingApp.API.Data
 
             //Many to many Messages relationship
             builder.Entity<Message>()
-            .HasKey(k => new { k.SenderId, k.RecipientId });
-
-            builder.Entity<Message>()
             .HasOne(u => u.Sender)
             .WithMany(u => u.MessagesSent)
             .OnDelete(DeleteBehavior.Restrict);

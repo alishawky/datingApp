@@ -11,8 +11,8 @@ using System;
 namespace DatingApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20180725163203_MessageEntityAdded")]
-    partial class MessageEntityAdded
+    [Migration("20180726132735_MessageEntityUpdated")]
+    partial class MessageEntityUpdated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,15 +35,12 @@ namespace DatingApp.API.Migrations
 
             modelBuilder.Entity("DatingApp.API.Models.Message", b =>
                 {
-                    b.Property<int>("SenderId");
-
-                    b.Property<int>("RecipientId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content");
 
                     b.Property<DateTime?>("DateRead");
-
-                    b.Property<int>("Id");
 
                     b.Property<bool>("IsRead");
 
@@ -51,11 +48,17 @@ namespace DatingApp.API.Migrations
 
                     b.Property<bool>("RecipientDeleted");
 
+                    b.Property<int>("RecipientId");
+
                     b.Property<bool>("SenderDeleted");
 
-                    b.HasKey("SenderId", "RecipientId");
+                    b.Property<int>("SenderId");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
                 });
