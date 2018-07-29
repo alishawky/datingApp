@@ -5,13 +5,14 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { User } from '../_models/User';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthUser } from '../_models/AuthUser';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  baseUrl = 'http://localhost:5000/api/auth/';
+  baseUrl = environment.apiUrl;
   userToken: any;
   decodedToken: any;
   currentUser: User;
@@ -32,7 +33,7 @@ export class AuthService {
       })
     };
 
-    return this.http.post<AuthUser>(this.baseUrl + 'login', model, httpOptions).pipe(
+    return this.http.post<AuthUser>(this.baseUrl + '/auth/login', model, httpOptions).pipe(
       map((response) => {
         const user: any = response;
         if (user) {
@@ -58,7 +59,7 @@ export class AuthService {
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post(this.baseUrl + 'register', user, httpOptions).pipe(
+    return this.http.post(this.baseUrl + '/auth/register', user, httpOptions).pipe(
       catchError(this.handleError)
     );
   }
